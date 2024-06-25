@@ -8,6 +8,7 @@
 #include "object.h"
 #include "memory.h"
 #include "vm.h"
+#include "core_library.h"
 
 VM vm;
 
@@ -21,7 +22,7 @@ static void resetStack() {
     vm.openUpvalues = NULL;
 }
 
-static void runtimeError(const char* format, ...) {
+void runtimeError(const char* format, ...) {
     va_list args;
     va_start(args, format);
     vfprintf(stderr, format, args);
@@ -41,7 +42,7 @@ static void runtimeError(const char* format, ...) {
     resetStack();
 }
 
-static void defineNative(const char* name, NativeFn function) {
+void defineNative(const char* name, NativeFn function) {
     push(OBJ_VAL(copyString(name, (int)strlen(name))));
     push(OBJ_VAL(newNative(function)));
     tableSet(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
@@ -82,8 +83,13 @@ void initVM() {
     initTable(&vm.strings);
     vm.initString = NULL;
     vm.initString = copyString("init", 4);
+
+    //Native functions
     defineNative("clock", clockNative);
     defineNative("input", inputNative);
+
+    //Core Library
+    initCoreLibrary(&vm);
 }
 
 void freeVM() {

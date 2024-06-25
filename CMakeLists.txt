@@ -21,4 +21,6 @@ add_executable(Kat main.c
         object.c
         table.h
         table.c
+        core_library.c
+        core_library.h
 )
