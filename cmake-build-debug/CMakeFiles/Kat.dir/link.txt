@@ -1,0 +1,3 @@
+"D:\CLion 2024.1.1\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\Kat.dir/objects.a
+"D:\CLion 2024.1.1\bin\mingw\bin\ar.exe" qc CMakeFiles\Kat.dir/objects.a @CMakeFiles\Kat.dir\objects1.rsp
+"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" -g -Wl,--whole-archive CMakeFiles\Kat.dir/objects.a -Wl,--no-whole-archive -o Kat.exe -Wl,--out-implib,libKat.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Kat.dir\linkLibs.rsp

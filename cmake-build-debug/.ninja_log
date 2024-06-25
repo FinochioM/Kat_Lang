@@ -1,0 +1,11 @@
+# ninja log v5
+4	177	7390736701122649	CMakeFiles/Kat.dir/main.c.obj	df88fcab93af3e32
+21	172	7390736701042629	CMakeFiles/Kat.dir/memory.c.obj	7a243cf0a1412a28
+34	221	7390736701512729	CMakeFiles/Kat.dir/vm.c.obj	a6adbc67105fb02d
+13	175	7390736701062634	CMakeFiles/Kat.dir/chunk.c.obj	e0d078d4f38b8b78
+238	441	7390736703753234	Kat.exe	5a55e7f8ee77771c
+27	192	7390736701212665	CMakeFiles/Kat.dir/value.c.obj	dbfa09e514c92b7b
+18	151	7390676406964196	CMakeFiles/Kat.dir/debug.c.obj	2892d8d6293266b1
+55	238	7390736701732777	CMakeFiles/Kat.dir/compiler.c.obj	7e1b795c0af10759
+231	918	7389972602125977	CMakeFiles/Kat.dir/scanner.c.obj	d9ba444b87d6ce7b
+78	225	7390736701542742	CMakeFiles/Kat.dir/object.c.obj	668134c98d5ebfe6

@@ -1,0 +1,3 @@
+C:/Users/Matias/Downloads/Kat_in_C-master1/cmake-build-debug/CMakeFiles/Kat.dir
+C:/Users/Matias/Downloads/Kat_in_C-master1/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Matias/Downloads/Kat_in_C-master1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
