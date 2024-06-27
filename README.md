@@ -38,9 +38,14 @@ The Kat language currently includes the following features and functionalities:
 
 ### Arrays
 
-- **Array Creation**: `[1, 2, 3, 4, 5]`
+- **Array Creation**: `var arr = [1, 2, 3, 4, 5];`
 - **Array Access**: `arr[0]`, `arr[1]`, etc.
 - **Array Modification**: `arr[1] = 42`
+
+- You can also concatenate string/number functionality.
+
+- **Creation with number functions**: `var arr = [abs(10), sqrt(4), 3 + 2, 4 / 2, 5];`
+- **Creation with string functions**: `var arr = [strcat("Test ", "Array"), strlen("Returns number with len")];`
 
 ### Example Usage
 
