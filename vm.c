@@ -50,21 +50,20 @@ void defineNative(const char* name, NativeFn function) {
     pop();
 }
 
-static Value inputNative(int argCount, Value* args){
-    if (argCount != 0){
+static Value inputNative(int argCount, Value* args) {
+    if (argCount != 0) {
         runtimeError("Expected 0 arguments but got %d.", argCount);
         return NIL_VAL;
     }
 
     char buffer[1024];
-    if (fgets(buffer, sizeof(buffer), stdin) == NULL){
+    if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
         return NIL_VAL;
     }
 
-    //Remove newline character if present.
     size_t length = strlen(buffer);
 
-    if (length > 0 && buffer[length - 1] == '\n'){
+    if (length > 0 && buffer[length - 1] == '\n') {
         buffer[length - 1] = '\0';
     }
 
@@ -84,11 +83,9 @@ void initVM() {
     vm.initString = NULL;
     vm.initString = copyString("init", 4);
 
-    //Native functions
     defineNative("clock", clockNative);
     defineNative("input", inputNative);
 
-    //Core Library
     initCoreLibrary(&vm);
 }
 
@@ -106,10 +103,14 @@ void push(Value value) {
 
 Value pop() {
     vm.stackTop--;
-    return *vm.stackTop;
+    Value value = *vm.stackTop;
+    return value;
 }
 
 static Value peek(int distance) {
+    printf("Peek value at distance %d: ", distance);
+    printValue(vm.stackTop[-1 - distance]);
+    printf("\n");
     return vm.stackTop[-1 - distance];
 }
 
@@ -292,10 +293,96 @@ static InterpretResult run() {
                 push(constant);
                 break;
             }
-            case OP_NIL: push(NIL_VAL); break;
-            case OP_TRUE: push(BOOL_VAL(true)); break;
-            case OP_FALSE: push(BOOL_VAL(false)); break;
-            case OP_POP: pop(); break;
+            case OP_BUILD_LIST: {
+                //Stack before: [item1, item2, ..., itemN, N] and after: [list]
+                ObjList* list = newList();
+                uint8_t itemCount = READ_BYTE();
+
+                //Add items to list
+                push(OBJ_VAL(list)); // Not swept by GC in appendToList
+                for (int i = itemCount; i > 0; i--) {
+                    appendToList(list, peek(i));
+                }
+                pop();
+
+                //Pop items from stack.
+                while (itemCount-- > 0) {
+                    pop();
+                }
+
+                push(OBJ_VAL(list));
+                break;
+            }
+            case OP_INDEX_SUBSCR: {
+                // Stack before: [list, index] and after: [index(list, index)]
+                Value index = pop();
+                Value list = pop();
+                Value result;
+
+                if (!IS_LIST(list)) {
+                    runtimeError("Indexing into non-list object.");
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+
+                ObjList* list_obj = AS_LIST(list);
+
+                if (!IS_NUMBER(index)) {
+                    runtimeError("Index must be a number.");
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+
+                int index_num = AS_NUMBER(index);
+
+                if (!isValidListIndex(list_obj, index_num)) {
+                    runtimeError("Index out of bounds.");
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+
+                result = indexFromList(list_obj, index_num);
+                push(result);
+                break;
+            }
+            case OP_STORE_SUBSCR: {
+                //Stack before: [list, index, item] and after: [item]
+                Value item = pop();
+                Value index = pop();
+                Value list = pop();
+
+                if (!IS_LIST(list)) {
+                    runtimeError("Cannot store value in a non-list.");
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+
+                ObjList* list_obj = AS_LIST(list);
+
+                if (!IS_NUMBER(index)) {
+                    runtimeError("Index must be a number.");
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+
+                int index_num = AS_NUMBER(index);
+
+                if (!isValidListIndex(list_obj, index_num)) {
+                    runtimeError("Index out of bounds.");
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+
+                storeToList(list_obj, index_num, item);
+                push(item);
+                break;
+            }
+            case OP_NIL:
+                push(NIL_VAL);
+                break;
+            case OP_TRUE:
+                push(BOOL_VAL(true));
+                break;
+            case OP_FALSE:
+                push(BOOL_VAL(false));
+                break;
+            case OP_POP:
+                pop();
+                break;
             case OP_GET_LOCAL: {
                 uint8_t slot = READ_BYTE();
                 push(frame->slots[slot]);
@@ -307,7 +394,7 @@ static InterpretResult run() {
                 break;
             }
             case OP_GET_GLOBAL: {
-                ObjString* name = READ_STRING();
+                ObjString *name = READ_STRING();
                 Value value;
                 if (!tableGet(&vm.globals, name, &value)) {
                     runtimeError("Undefined variable '%s'.", name->chars);
@@ -317,13 +404,13 @@ static InterpretResult run() {
                 break;
             }
             case OP_DEFINE_GLOBAL: {
-                ObjString* name = READ_STRING();
+                ObjString *name = READ_STRING();
                 tableSet(&vm.globals, name, peek(0));
                 pop();
                 break;
             }
             case OP_SET_GLOBAL: {
-                ObjString* name = READ_STRING();
+                ObjString *name = READ_STRING();
                 if (tableSet(&vm.globals, name, peek(0))) {
                     tableDelete(&vm.globals, name);
                     runtimeError("Undefined variable '%s'.", name->chars);
@@ -346,8 +433,8 @@ static InterpretResult run() {
                     runtimeError("Only instances have properties.");
                     return INTERPRET_RUNTIME_ERROR;
                 }
-                ObjInstance* instance = AS_INSTANCE(peek(0));
-                ObjString* name = READ_STRING();
+                ObjInstance *instance = AS_INSTANCE(peek(0));
+                ObjString *name = READ_STRING();
                 Value value;
                 if (tableGet(&instance->fields, name, &value)) {
                     pop();
@@ -364,7 +451,7 @@ static InterpretResult run() {
                     runtimeError("Only instances have fields.");
                     return INTERPRET_RUNTIME_ERROR;
                 }
-                ObjInstance* instance = AS_INSTANCE(peek(1));
+                ObjInstance *instance = AS_INSTANCE(peek(1));
                 tableSet(&instance->fields, READ_STRING(), peek(0));
                 Value value = pop();
                 pop();
@@ -372,8 +459,8 @@ static InterpretResult run() {
                 break;
             }
             case OP_GET_SUPER: {
-                ObjString* name = READ_STRING();
-                ObjClass* superclass = AS_CLASS(pop());
+                ObjString *name = READ_STRING();
+                ObjClass *superclass = AS_CLASS(pop());
                 if (!bindMethod(superclass, name)) {
                     return INTERPRET_RUNTIME_ERROR;
                 }
@@ -385,8 +472,12 @@ static InterpretResult run() {
                 push(BOOL_VAL(valuesEqual(a, b)));
                 break;
             }
-            case OP_GREATER:  BINARY_OP(BOOL_VAL, >); break;
-            case OP_LESS:     BINARY_OP(BOOL_VAL, <); break;
+            case OP_GREATER:
+                BINARY_OP(BOOL_VAL, >);
+                break;
+            case OP_LESS:
+                BINARY_OP(BOOL_VAL, <);
+                break;
             case OP_ADD: {
                 if (IS_STRING(peek(0)) && IS_STRING(peek(1))) {
                     concatenate();
@@ -400,9 +491,15 @@ static InterpretResult run() {
                 }
                 break;
             }
-            case OP_SUBTRACT: BINARY_OP(NUMBER_VAL, -); break;
-            case OP_MULTIPLY: BINARY_OP(NUMBER_VAL, *); break;
-            case OP_DIVIDE:   BINARY_OP(NUMBER_VAL, /); break;
+            case OP_SUBTRACT:
+                BINARY_OP(NUMBER_VAL, -);
+                break;
+            case OP_MULTIPLY:
+                BINARY_OP(NUMBER_VAL, *);
+                break;
+            case OP_DIVIDE:
+                BINARY_OP(NUMBER_VAL, /);
+                break;
             case OP_NOT:
                 push(BOOL_VAL(isFalsey(pop())));
                 break;
@@ -442,7 +539,7 @@ static InterpretResult run() {
                 break;
             }
             case OP_INVOKE: {
-                ObjString* method = READ_STRING();
+                ObjString *method = READ_STRING();
                 int argCount = READ_BYTE();
                 if (!invoke(method, argCount)) {
                     return INTERPRET_RUNTIME_ERROR;
@@ -451,9 +548,9 @@ static InterpretResult run() {
                 break;
             }
             case OP_SUPER_INVOKE: {
-                ObjString* method = READ_STRING();
+                ObjString *method = READ_STRING();
                 int argCount = READ_BYTE();
-                ObjClass* superclass = AS_CLASS(pop());
+                ObjClass *superclass = AS_CLASS(pop());
                 if (!invokeFromClass(superclass, method, argCount)) {
                     return INTERPRET_RUNTIME_ERROR;
                 }
@@ -461,8 +558,8 @@ static InterpretResult run() {
                 break;
             }
             case OP_CLOSURE: {
-                ObjFunction* function = AS_FUNCTION(READ_CONSTANT());
-                ObjClosure* closure = newClosure(function);
+                ObjFunction *function = AS_FUNCTION(READ_CONSTANT());
+                ObjClosure *closure = newClosure(function);
                 push(OBJ_VAL(closure));
                 for (int i = 0; i < closure->upvalueCount; i++) {
                     uint8_t isLocal = READ_BYTE();
@@ -501,7 +598,7 @@ static InterpretResult run() {
                     runtimeError("Superclass must be a class.");
                     return INTERPRET_RUNTIME_ERROR;
                 }
-                ObjClass* subclass = AS_CLASS(peek(0));
+                ObjClass *subclass = AS_CLASS(peek(0));
                 tableAddAll(&AS_CLASS(superclass)->methods, &subclass->methods);
                 pop();
                 break;

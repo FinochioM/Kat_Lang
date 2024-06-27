@@ -28,7 +28,8 @@ typedef enum {
     PREC_FACTOR,
     PREC_UNARY,
     PREC_CALL,
-    PREC_PRIMARY
+    PREC_SUBSCRIPT,
+    PREC_PRIMARY,
 } Precedence;
 
 typedef void (*ParseFn)(bool canAssign);
@@ -226,9 +227,9 @@ static ObjFunction* endCompiler() {
 
 #ifdef DEBUG_PRINT_CODE
     if (!parser.hadError) {
-    disassembleChunk(currentChunk(), function->name != NULL
-        ? function->name->chars : "<script>");
-  }
+        disassembleChunk(currentChunk(), function->name != NULL
+                        ? function->name->chars : "<script>");
+    }
 #endif
 
     current = current->enclosing;
@@ -549,6 +550,43 @@ static void unary(bool canAssign) {
     }
 }
 
+static void list(bool canAssign){
+    int itemCount = 0;
+    if (!check(TOKEN_RIGHT_BRACKET)){
+        do{
+            if (check(TOKEN_RIGHT_BRACKET)){
+                break;
+            }
+
+            parsePrecedence(PREC_OR);
+
+            if (itemCount == UINT8_COUNT){
+                error("List can't have more than 255 items.");
+            }
+            itemCount++;
+        }while (match(TOKEN_COMMA));
+    }
+
+    consume(TOKEN_RIGHT_BRACKET, "Expect ']' after list items.");
+
+    emitByte(OP_BUILD_LIST);
+    emitByte(itemCount);
+    return;
+}
+
+static void subscript(bool canAssign){
+    parsePrecedence(PREC_OR);
+    consume(TOKEN_RIGHT_BRACKET, "Expect ']' after index.");
+
+    if (canAssign && match(TOKEN_EQUAL)){
+        expression();
+        emitByte(OP_STORE_SUBSCR);
+    }else{
+        emitByte(OP_INDEX_SUBSCR);
+    }
+    return;
+}
+
 ParseRule rules[] = {
         [TOKEN_LEFT_PAREN]    = {grouping, call,   PREC_CALL},
         [TOKEN_RIGHT_PAREN]   = {NULL,     NULL,   PREC_NONE},
@@ -589,6 +627,8 @@ ParseRule rules[] = {
         [TOKEN_VAR]           = {NULL,     NULL,   PREC_NONE},
         [TOKEN_WHILE]         = {NULL,     NULL,   PREC_NONE},
         [TOKEN_ERROR]         = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_LEFT_BRACKET]  = {list,    subscript,  PREC_SUBSCRIPT},
+        [TOKEN_RIGHT_BRACKET] = {NULL,     NULL,   PREC_NONE},
         [TOKEN_EOF]           = {NULL,     NULL,   PREC_NONE},
 };
 

@@ -24,6 +24,46 @@ static Obj* allocateObject(size_t size, ObjType type) {
     return object;
 }
 
+ObjList* newList(){
+    ObjList* list = ALLOCATE_OBJ(ObjList, OBJ_LIST);
+    list->items = NULL;
+    list->count = 0;
+    list->capacity = 0;
+    return list;
+}
+
+void appendToList(ObjList* list, Value value) {
+    // Grow the array if necessary
+    if (list->capacity < list->count + 1) {
+        int oldCapacity = list->capacity;
+        list->capacity = GROW_CAPACITY(oldCapacity);
+        list->items = GROW_ARRAY(Value, list->items, oldCapacity, list->capacity);
+    }
+    list->items[list->count] = value;
+    list->count++;
+    return;
+}
+
+void storeToList(ObjList* list, int index, Value value){
+    list->items[index] = value;
+}
+
+Value indexFromList(ObjList* list, int index){
+    return list->items[index];
+}
+
+void deleteFromList(ObjList* list, int index){
+    for (int i = index; i < list->count - 1; i++){
+        list->items[i] = list->items[i + 1];
+    }
+    list->items[list->count - 1] = NIL_VAL;
+    list->count--;
+}
+
+bool isValidListIndex(ObjList* list, int index){
+    return index >= 0 && index < list->count;
+}
+
 ObjBoundMethod* newBoundMethod(Value receiver, ObjClosure* method) {
     ObjBoundMethod* bound = ALLOCATE_OBJ(ObjBoundMethod, OBJ_BOUND_METHOD);
     bound->receiver = receiver;
@@ -134,6 +174,7 @@ static void printFunction(ObjFunction* function) {
     printf("<fn %s>", function->name->chars);
 }
 
+
 void printObject(Value value) {
     switch (OBJ_TYPE(value)) {
         case OBJ_BOUND_METHOD:
@@ -159,6 +200,16 @@ void printObject(Value value) {
             break;
         case OBJ_UPVALUE:
             printf("upvalue");
+            break;
+        case OBJ_LIST:
+            printf("[");
+            for (int i = 0; i < AS_LIST(value)->count; i++){
+                printValue(AS_LIST(value)->items[i]);
+                if (i != AS_LIST(value)->count - 1){
+                    printf(", ");
+                }
+            }
+            printf("]");
             break;
     }
 }

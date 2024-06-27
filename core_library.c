@@ -583,6 +583,50 @@ static Value assertNative(int argCount, Value* args) {
     return NIL_VAL;
 }
 
+//<<<<<<<<<<<<<<<<<<<<<ARRAYS AND LISTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+//Define the PUSH function. Appends a value to a list.
+static Value appendArrayNative(int argCount, Value* args){
+    if (argCount != 2 || !IS_LIST(args[0])){
+        runtimeError("Expected a list and a value as arguments");
+        return NIL_VAL;
+    }
+
+    ObjList* list = AS_LIST(args[0]);
+    Value item = args[1];
+    appendToList(list, item);
+    return NIL_VAL;
+}
+
+//Define the DEL function. Deletes an element from a list.
+static Value deleteArrayNative(int argCount, Value* args){
+    if (argCount != 2 || !IS_LIST(args[0] || !IS_NUMBER(args[1]))){
+        runtimeError("Expected a list and an index as arguments");
+        return NIL_VAL;
+    }
+
+    ObjList* list = AS_LIST(args[0]);
+    int index = (int)AS_NUMBER(args[1]);
+
+    if (!isValidListIndex(list, index)){
+        runtimeError("Index out of bounds");
+        return NIL_VAL;
+    }
+
+    deleteFromList(list, index);
+    return NIL_VAL;
+}
+
+//Define the len function. Returns the length of a list.
+static Value lenArrayNative(int argCount, Value* args){
+    if (argCount != 1 || !IS_LIST(args[0])){
+        runtimeError("Expected a list as argument");
+        return NIL_VAL;
+    }
+
+    ObjList* list = AS_LIST(args[0]);
+    return NUMBER_VAL((double)list->count);
+}
 
 void initCoreLibrary(VM *vvm){
     //Mathematical functions
@@ -628,4 +672,9 @@ void initCoreLibrary(VM *vvm){
     defineNative("rand", randNative);
     defineNative("srand", srandNative);
     defineNative("assert", assertNative);
+
+    //Arrays and lists
+    defineNative("push", appendArrayNative);
+    defineNative("del", deleteArrayNative);
+    defineNative("len", lenArrayNative);
 }
