@@ -123,7 +123,8 @@
 				10,
 				12,
 				14,
-				16
+				16,
+				19
 			]
 		}
 	],
@@ -234,6 +235,11 @@
 			"compileGroupIndex" : 0,
 			"path" : "core_library.c",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "core_library.h",
+			"sourceGroupIndex" : 1
 		}
 	],
 	"type" : "EXECUTABLE"

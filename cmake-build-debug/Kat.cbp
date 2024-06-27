@@ -91,6 +91,9 @@
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/core_library.c">
 			<Option target="Kat"/>
 		</Unit>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/core_library.h">
+			<Option target="Kat"/>
+		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/debug.c">
 			<Option target="Kat"/>
 		</Unit>
