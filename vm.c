@@ -108,9 +108,6 @@ Value pop() {
 }
 
 static Value peek(int distance) {
-    printf("Peek value at distance %d: ", distance);
-    printValue(vm.stackTop[-1 - distance]);
-    printf("\n");
     return vm.stackTop[-1 - distance];
 }
 

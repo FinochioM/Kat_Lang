@@ -272,6 +272,30 @@ memory.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/memory.c.s
 .PHONY : memory.c.s
 
+native.obj: native.c.obj
+.PHONY : native.obj
+
+# target to build an object file
+native.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/native.c.obj
+.PHONY : native.c.obj
+
+native.i: native.c.i
+.PHONY : native.i
+
+# target to preprocess a source file
+native.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/native.c.i
+.PHONY : native.c.i
+
+native.s: native.c.s
+.PHONY : native.s
+
+# target to generate assembly for a file
+native.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/native.c.s
+.PHONY : native.c.s
+
 object.obj: object.c.obj
 .PHONY : object.obj
 
@@ -419,6 +443,9 @@ help:
 	@echo ... memory.obj
 	@echo ... memory.i
 	@echo ... memory.s
+	@echo ... native.obj
+	@echo ... native.i
+	@echo ... native.s
 	@echo ... object.obj
 	@echo ... object.i
 	@echo ... object.s

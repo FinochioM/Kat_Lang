@@ -23,4 +23,7 @@ add_executable(Kat main.c
         table.c
         core_library.c
         core_library.h
+        resource.h
+        native.h
+        native.c
 )

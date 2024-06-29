@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/Matias/Downloads/Kat_in_C-master1/debug.c" "CMakeFiles/Kat.dir/debug.c.obj" "gcc" "CMakeFiles/Kat.dir/debug.c.obj.d"
   "C:/Users/Matias/Downloads/Kat_in_C-master1/main.c" "CMakeFiles/Kat.dir/main.c.obj" "gcc" "CMakeFiles/Kat.dir/main.c.obj.d"
   "C:/Users/Matias/Downloads/Kat_in_C-master1/memory.c" "CMakeFiles/Kat.dir/memory.c.obj" "gcc" "CMakeFiles/Kat.dir/memory.c.obj.d"
+  "C:/Users/Matias/Downloads/Kat_in_C-master1/native.c" "CMakeFiles/Kat.dir/native.c.obj" "gcc" "CMakeFiles/Kat.dir/native.c.obj.d"
   "C:/Users/Matias/Downloads/Kat_in_C-master1/object.c" "CMakeFiles/Kat.dir/object.c.obj" "gcc" "CMakeFiles/Kat.dir/object.c.obj.d"
   "C:/Users/Matias/Downloads/Kat_in_C-master1/scanner.c" "CMakeFiles/Kat.dir/scanner.c.obj" "gcc" "CMakeFiles/Kat.dir/scanner.c.obj.d"
   "C:/Users/Matias/Downloads/Kat_in_C-master1/table.c" "CMakeFiles/Kat.dir/table.c.obj" "gcc" "CMakeFiles/Kat.dir/table.c.obj.d"

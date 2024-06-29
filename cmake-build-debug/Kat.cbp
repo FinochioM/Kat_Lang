@@ -109,10 +109,19 @@
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/memory.h">
 			<Option target="Kat"/>
 		</Unit>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/native.c">
+			<Option target="Kat"/>
+		</Unit>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/native.h">
+			<Option target="Kat"/>
+		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/object.c">
 			<Option target="Kat"/>
 		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/object.h">
+			<Option target="Kat"/>
+		</Unit>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/resource.h">
 			<Option target="Kat"/>
 		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/scanner.c">

@@ -11,6 +11,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Kat.dir/main.c.obj.d"
   "CMakeFiles/Kat.dir/memory.c.obj"
   "CMakeFiles/Kat.dir/memory.c.obj.d"
+  "CMakeFiles/Kat.dir/native.c.obj"
+  "CMakeFiles/Kat.dir/native.c.obj.d"
   "CMakeFiles/Kat.dir/object.c.obj"
   "CMakeFiles/Kat.dir/object.c.obj.d"
   "CMakeFiles/Kat.dir/scanner.c.obj"
