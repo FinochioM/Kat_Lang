@@ -14,6 +14,9 @@ CMakeFiles/Kat.dir/object.c.obj: \
  D:/CLion\ 2024.1.1/bin/mingw/x86_64-w64-mingw32/include/string.h \
  D:/CLion\ 2024.1.1/bin/mingw/x86_64-w64-mingw32/include/crtdefs.h \
  D:/CLion\ 2024.1.1/bin/mingw/x86_64-w64-mingw32/include/sec_api/string_s.h \
+ D:/CLion\ 2024.1.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdarg.h \
+ D:/CLion\ 2024.1.1/bin/mingw/x86_64-w64-mingw32/include/stdarg.h \
+ D:/CLion\ 2024.1.1/bin/mingw/x86_64-w64-mingw32/include/_mingw_stdarg.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\memory.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\common.h \
  D:/CLion\ 2024.1.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdbool.h \
@@ -25,4 +28,5 @@ CMakeFiles/Kat.dir/object.c.obj: \
  C:\Users\Matias\Downloads\Kat_in_C-master1\chunk.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\value.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\table.h \
- C:\Users\Matias\Downloads\Kat_in_C-master1\vm.h
+ C:\Users\Matias\Downloads\Kat_in_C-master1\vm.h \
+ C:\Users\Matias\Downloads\Kat_in_C-master1\hash.h
