@@ -33,4 +33,5 @@ CMakeFiles/Kat.dir/main.c.obj: \
  C:\Users\Matias\Downloads\Kat_in_C-master1\object.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\chunk.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\value.h \
- C:\Users\Matias\Downloads\Kat_in_C-master1\table.h
+ C:\Users\Matias\Downloads\Kat_in_C-master1\table.h \
+ C:\Users\Matias\Downloads\Kat_in_C-master1\debug.h

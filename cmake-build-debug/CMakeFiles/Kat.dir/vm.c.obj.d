@@ -36,4 +36,6 @@ CMakeFiles/Kat.dir/vm.c.obj: \
  C:\Users\Matias\Downloads\Kat_in_C-master1\vm.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\debug.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\memory.h \
- C:\Users\Matias\Downloads\Kat_in_C-master1\core_library.h
+ C:\Users\Matias\Downloads\Kat_in_C-master1\native.h \
+ C:\Users\Matias\Downloads\Kat_in_C-master1\std/lang.h \
+ C:/Users/Matias/Downloads/Kat_in_C-master1/common.h

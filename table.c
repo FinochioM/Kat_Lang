@@ -14,7 +14,7 @@ void initTable(Table* table) {
     table->entries = NULL;
 }
 
-void freeTable(Table* table) {
+void freeTable(VM* vm, Table* table) {
     FREE_ARRAY(Entry, table->entries, table->capacity);
     initTable(table);
 }
@@ -28,10 +28,12 @@ static Entry* findEntry(Entry* entries, int capacity, ObjString* key) {
         if (entry->key == NULL) {
             if (IS_NIL(entry->value)) {
                 return tombstone != NULL ? tombstone : entry;
-            } else {
+            }
+            else {
                 if (tombstone == NULL) tombstone = entry;
             }
-        } else if (entry->key == key) {
+        }
+        else if (entry->key == key) {
             return entry;
         }
 
@@ -49,7 +51,7 @@ bool tableGet(Table* table, ObjString* key, Value* value) {
     return true;
 }
 
-static void adjustCapacity(Table* table, int capacity) {
+static void adjustCapacity(VM* vm, Table* table, int capacity) {
     Entry* entries = ALLOCATE(Entry, capacity);
     for (int i = 0; i < capacity; i++) {
         entries[i].key = NULL;
@@ -72,10 +74,10 @@ static void adjustCapacity(Table* table, int capacity) {
     table->capacity = capacity;
 }
 
-bool tableSet(Table* table, ObjString* key, Value value) {
+bool tableSet(VM* vm, Table* table, ObjString* key, Value value) {
     if (table->count + 1 > table->capacity * TABLE_MAX_LOAD) {
         int capacity = GROW_CAPACITY(table->capacity);
-        adjustCapacity(table, capacity);
+        adjustCapacity(vm, table, capacity);
     }
 
     Entry* entry = findEntry(table->entries, table->capacity, key);
@@ -98,11 +100,11 @@ bool tableDelete(Table* table, ObjString* key) {
     return true;
 }
 
-void tableAddAll(Table* from, Table* to) {
+void tableAddAll(VM* vm, Table* from, Table* to) {
     for (int i = 0; i < from->capacity; i++) {
         Entry* entry = &from->entries[i];
         if (entry->key != NULL) {
-            tableSet(to, entry->key, entry->value);
+            tableSet(vm, to, entry->key, entry->value);
         }
     }
 }
@@ -115,12 +117,10 @@ ObjString* tableFindString(Table* table, const char* chars, int length, uint32_t
         Entry* entry = &table->entries[index];
         if (entry->key == NULL) {
             if (IS_NIL(entry->value)) return NULL;
-        } else if (entry->key->length == length &&
-                   entry->key->hash == hash &&
-                   memcmp(entry->key->chars, chars, length) == 0) {
+        }
+        else if (entry->key->length == length && entry->key->hash == hash && memcmp(entry->key->chars, chars, length) == 0) {
             return entry->key;
         }
-
         index = (index + 1) & (table->capacity - 1);
     }
 }
@@ -134,10 +134,10 @@ void tableRemoveWhite(Table* table) {
     }
 }
 
-void markTable(Table* table) {
+void markTable(VM* vm, Table* table) {
     for (int i = 0; i < table->capacity; i++) {
         Entry* entry = &table->entries[i];
-        markObject((Obj*)entry->key);
-        markValue(entry->value);
+        markObject(vm, (Obj*)entry->key);
+        markValue(vm, entry->value);
     }
 }

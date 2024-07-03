@@ -76,6 +76,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/assert.c">
+			<Option target="Kat"/>
+		</Unit>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/assert.h">
+			<Option target="Kat"/>
+		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/chunk.c">
 			<Option target="Kat"/>
 		</Unit>
@@ -88,16 +94,16 @@
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/compiler.h">
 			<Option target="Kat"/>
 		</Unit>
-		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/core_library.c">
-			<Option target="Kat"/>
-		</Unit>
-		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/core_library.h">
-			<Option target="Kat"/>
-		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/debug.c">
 			<Option target="Kat"/>
 		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/debug.h">
+			<Option target="Kat"/>
+		</Unit>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/hash.c">
+			<Option target="Kat"/>
+		</Unit>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/hash.h">
 			<Option target="Kat"/>
 		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/main.c">
@@ -128,6 +134,12 @@
 			<Option target="Kat"/>
 		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/scanner.h">
+			<Option target="Kat"/>
+		</Unit>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/std/lang.c">
+			<Option target="Kat"/>
+		</Unit>
+		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/std/lang.h">
 			<Option target="Kat"/>
 		</Unit>
 		<Unit filename="C:/Users/Matias/Downloads/Kat_in_C-master1/table.c">

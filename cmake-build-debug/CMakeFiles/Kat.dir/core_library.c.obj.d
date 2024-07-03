@@ -30,13 +30,13 @@ CMakeFiles/Kat.dir/core_library.c.obj: \
  D:/CLion\ 2024.1.1/bin/mingw/x86_64-w64-mingw32/include/pthread_time.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\core_library.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\vm.h \
- C:\Users\Matias\Downloads\Kat_in_C-master1\object.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\common.h \
  D:/CLion\ 2024.1.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdbool.h \
  D:/CLion\ 2024.1.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stddef.h \
  D:/CLion\ 2024.1.1/bin/mingw/x86_64-w64-mingw32/include/stddef.h \
  D:/CLion\ 2024.1.1/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdint.h \
  D:/CLion\ 2024.1.1/bin/mingw/x86_64-w64-mingw32/include/stdint.h \
+ C:\Users\Matias\Downloads\Kat_in_C-master1\object.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\chunk.h \
  C:\Users\Matias\Downloads\Kat_in_C-master1\value.h \
  D:/CLion\ 2024.1.1/bin/mingw/x86_64-w64-mingw32/include/string.h \

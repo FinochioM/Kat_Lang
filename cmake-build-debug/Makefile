@@ -128,6 +128,30 @@ Kat/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/build
 .PHONY : Kat/fast
 
+assert.obj: assert.c.obj
+.PHONY : assert.obj
+
+# target to build an object file
+assert.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/assert.c.obj
+.PHONY : assert.c.obj
+
+assert.i: assert.c.i
+.PHONY : assert.i
+
+# target to preprocess a source file
+assert.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/assert.c.i
+.PHONY : assert.c.i
+
+assert.s: assert.c.s
+.PHONY : assert.s
+
+# target to generate assembly for a file
+assert.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/assert.c.s
+.PHONY : assert.c.s
+
 chunk.obj: chunk.c.obj
 .PHONY : chunk.obj
 
@@ -176,30 +200,6 @@ compiler.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/compiler.c.s
 .PHONY : compiler.c.s
 
-core_library.obj: core_library.c.obj
-.PHONY : core_library.obj
-
-# target to build an object file
-core_library.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/core_library.c.obj
-.PHONY : core_library.c.obj
-
-core_library.i: core_library.c.i
-.PHONY : core_library.i
-
-# target to preprocess a source file
-core_library.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/core_library.c.i
-.PHONY : core_library.c.i
-
-core_library.s: core_library.c.s
-.PHONY : core_library.s
-
-# target to generate assembly for a file
-core_library.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/core_library.c.s
-.PHONY : core_library.c.s
-
 debug.obj: debug.c.obj
 .PHONY : debug.obj
 
@@ -223,6 +223,30 @@ debug.s: debug.c.s
 debug.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/debug.c.s
 .PHONY : debug.c.s
+
+hash.obj: hash.c.obj
+.PHONY : hash.obj
+
+# target to build an object file
+hash.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/hash.c.obj
+.PHONY : hash.c.obj
+
+hash.i: hash.c.i
+.PHONY : hash.i
+
+# target to preprocess a source file
+hash.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/hash.c.i
+.PHONY : hash.c.i
+
+hash.s: hash.c.s
+.PHONY : hash.s
+
+# target to generate assembly for a file
+hash.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/hash.c.s
+.PHONY : hash.c.s
 
 main.obj: main.c.obj
 .PHONY : main.obj
@@ -344,6 +368,30 @@ scanner.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/scanner.c.s
 .PHONY : scanner.c.s
 
+std/lang.obj: std/lang.c.obj
+.PHONY : std/lang.obj
+
+# target to build an object file
+std/lang.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/std/lang.c.obj
+.PHONY : std/lang.c.obj
+
+std/lang.i: std/lang.c.i
+.PHONY : std/lang.i
+
+# target to preprocess a source file
+std/lang.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/std/lang.c.i
+.PHONY : std/lang.c.i
+
+std/lang.s: std/lang.c.s
+.PHONY : std/lang.s
+
+# target to generate assembly for a file
+std/lang.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Kat.dir\build.make CMakeFiles/Kat.dir/std/lang.c.s
+.PHONY : std/lang.c.s
+
 table.obj: table.c.obj
 .PHONY : table.obj
 
@@ -425,18 +473,21 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... Kat
+	@echo ... assert.obj
+	@echo ... assert.i
+	@echo ... assert.s
 	@echo ... chunk.obj
 	@echo ... chunk.i
 	@echo ... chunk.s
 	@echo ... compiler.obj
 	@echo ... compiler.i
 	@echo ... compiler.s
-	@echo ... core_library.obj
-	@echo ... core_library.i
-	@echo ... core_library.s
 	@echo ... debug.obj
 	@echo ... debug.i
 	@echo ... debug.s
+	@echo ... hash.obj
+	@echo ... hash.i
+	@echo ... hash.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
@@ -452,6 +503,9 @@ help:
 	@echo ... scanner.obj
 	@echo ... scanner.i
 	@echo ... scanner.s
+	@echo ... std/lang.obj
+	@echo ... std/lang.i
+	@echo ... std/lang.s
 	@echo ... table.obj
 	@echo ... table.i
 	@echo ... table.s

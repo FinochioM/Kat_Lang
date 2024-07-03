@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "common.h"
 #include "compiler.h"
 #include "memory.h"
@@ -14,6 +15,7 @@ typedef struct {
     Scanner* scanner;
     Token current;
     Token previous;
+    Token rootClass;
     bool hadError;
     bool panicMode;
 } Parser;
@@ -29,8 +31,7 @@ typedef enum {
     PREC_FACTOR,
     PREC_UNARY,
     PREC_CALL,
-    PREC_SUBSCRIPT,
-    PREC_PRIMARY,
+    PREC_PRIMARY
 } Precedence;
 
 typedef void (*ParseFn)(VM* vm, bool canAssign);
@@ -73,7 +74,6 @@ typedef struct Compiler {
 typedef struct ClassCompiler {
     struct ClassCompiler* enclosing;
     Token name;
-    bool hasSuperclass;
 } ClassCompiler;
 
 Parser parser;
@@ -91,8 +91,11 @@ static void errorAt(Token* token, const char* message) {
 
     if (token->type == TOKEN_EOF) {
         fprintf(stderr, " at end");
-    } else if (token->type == TOKEN_ERROR) {
-    } else {
+    }
+    else if (token->type == TOKEN_ERROR) {
+
+    }
+    else {
         fprintf(stderr, " at '%.*s'", token->length, token->start);
     }
 
@@ -167,10 +170,10 @@ static int emitJump(VM* vm, uint8_t instruction) {
 static void emitReturn(VM* vm) {
     if (current->type == TYPE_INITIALIZER) {
         emitBytes(vm, OP_GET_LOCAL, 0);
-    } else {
+    }
+    else {
         emitByte(vm, OP_NIL);
     }
-
     emitByte(vm, OP_RETURN);
 }
 
@@ -217,7 +220,8 @@ static void initCompiler(VM* vm, Compiler* compiler, FunctionType type) {
     if (type != TYPE_FUNCTION) {
         local->name.start = "this";
         local->name.length = 4;
-    } else {
+    }
+    else {
         local->name.start = "";
         local->name.length = 0;
     }
@@ -229,11 +233,9 @@ static ObjFunction* endCompiler(VM* vm) {
 
 #ifdef DEBUG_PRINT_CODE
     if (!parser.hadError) {
-        disassembleChunk(currentChunk(), function->name != NULL
-                        ? function->name->chars : "<script>");
+        disassembleChunk(currentChunk(), function->name != NULL ? function->name->chars : "<script>");
     }
 #endif
-
     current = current->enclosing;
     return function;
 }
@@ -248,7 +250,8 @@ static void endScope(VM* vm) {
     while (current->localCount > 0 && current->locals[current->localCount - 1].depth > current->scopeDepth) {
         if (current->locals[current->localCount - 1].isCaptured) {
             emitByte(vm, OP_CLOSE_UPVALUE);
-        } else {
+        }
+        else {
             emitByte(vm, OP_POP);
         }
         current->localCount--;
@@ -280,12 +283,10 @@ static int resolveLocal(Compiler* compiler, Token* name) {
             return i;
         }
     }
-
     return -1;
 }
 
-static int addUpvalue(Compiler* compiler, uint8_t index,
-                      bool isLocal) {
+static int addUpvalue(Compiler* compiler, uint8_t index, bool isLocal) {
     int upvalueCount = compiler->function->upvalueCount;
 
     for (int i = 0; i < upvalueCount; i++) {
@@ -318,7 +319,6 @@ static int resolveUpvalue(Compiler* compiler, Token* name) {
     if (upvalue != -1) {
         return addUpvalue(compiler, (uint8_t)upvalue, false);
     }
-
     return -1;
 }
 
@@ -348,7 +348,6 @@ static void declareVariable() {
             error("Already a variable with this name in this scope.");
         }
     }
-
     addLocal(*name);
 }
 
@@ -369,7 +368,6 @@ static void defineVariable(VM* vm, uint8_t global) {
         markInitialized();
         return;
     }
-
     emitBytes(vm, OP_DEFINE_GLOBAL, global);
 }
 
@@ -429,11 +427,13 @@ static void dot(VM* vm, bool canAssign) {
     if (canAssign && match(TOKEN_EQUAL)) {
         expression(vm);
         emitBytes(vm, OP_SET_PROPERTY, name);
-    } else if (match(TOKEN_LEFT_PAREN)) {
+    }
+    else if (match(TOKEN_LEFT_PAREN)) {
         uint8_t argCount = argumentList(vm);
         emitBytes(vm, OP_INVOKE, name);
         emitByte(vm, argCount);
-    } else {
+    }
+    else {
         emitBytes(vm, OP_GET_PROPERTY, name);
     }
 }
@@ -478,18 +478,22 @@ static void namedVariable(VM* vm, Token name, bool canAssign) {
     if (arg != -1) {
         getOp = OP_GET_LOCAL;
         setOp = OP_SET_LOCAL;
-    } else if ((arg = resolveUpvalue(current, &name)) != -1) {
+    }
+    else if ((arg = resolveUpvalue(current, &name)) != -1) {
         getOp = OP_GET_UPVALUE;
         setOp = OP_SET_UPVALUE;
-    } else {
+    }
+    else {
         arg = identifierConstant(vm, &name);
         getOp = OP_GET_GLOBAL;
         setOp = OP_SET_GLOBAL;
     }
+
     if (canAssign && match(TOKEN_EQUAL)) {
         expression(vm);
         emitBytes(vm, setOp, (uint8_t)arg);
-    } else {
+    }
+    else {
         emitBytes(vm, getOp, (uint8_t)arg);
     }
 }
@@ -507,20 +511,21 @@ static Token syntheticToken(const char* text) {
 
 static void super_(VM* vm, bool canAssign) {
     if (currentClass == NULL) {
-        error("Can't use 'super' outside of a class.");
-    } else if (!currentClass->hasSuperclass) {
-        error("Can't use 'super' in a class with no superclass.");
+        error("Cannot use 'super' outside of a class.");
     }
+
     consume(TOKEN_DOT, "Expect '.' after 'super'.");
     consume(TOKEN_IDENTIFIER, "Expect superclass method name.");
     uint8_t name = identifierConstant(vm, &parser.previous);
+
     namedVariable(vm, syntheticToken("this"), false);
     if (match(TOKEN_LEFT_PAREN)) {
         uint8_t argCount = argumentList(vm);
         namedVariable(vm, syntheticToken("super"), false);
         emitBytes(vm, OP_SUPER_INVOKE, name);
         emitByte(vm, argCount);
-    } else {
+    }
+    else {
         namedVariable(vm, syntheticToken("super"), false);
         emitBytes(vm, OP_GET_SUPER, name);
     }
@@ -528,7 +533,7 @@ static void super_(VM* vm, bool canAssign) {
 
 static void this_(VM* vm, bool canAssign) {
     if (currentClass == NULL) {
-        error("Can't use 'this' outside of a class.");
+        error("Cannot use 'this' outside of a class.");
         return;
     }
     variable(vm, false);
@@ -545,86 +550,46 @@ static void unary(VM* vm, bool canAssign) {
     }
 }
 
-static void list(VM* vm, bool canAssign){
-    int itemCount = 0;
-    if (!check(TOKEN_RIGHT_BRACKET)){
-        do{
-            if (check(TOKEN_RIGHT_BRACKET)){
-                break;
-            }
-
-            parsePrecedence(vm, PREC_OR);
-
-            if (itemCount == UINT8_COUNT){
-                error("List can't have more than 255 items.");
-            }
-            itemCount++;
-        }while (match(TOKEN_COMMA));
-    }
-
-    consume(TOKEN_RIGHT_BRACKET, "Expect ']' after list items.");
-
-    emitByte(vm, OP_BUILD_LIST);
-    emitByte(vm, itemCount);
-    return;
-}
-
-static void subscript(VM* vm, bool canAssign){
-    parsePrecedence(vm, PREC_OR);
-    consume(TOKEN_RIGHT_BRACKET, "Expect ']' after index.");
-
-    if (canAssign && match(TOKEN_EQUAL)){
-        expression(vm);
-        emitByte(vm, OP_STORE_SUBSCR);
-    }else{
-        emitByte(vm, OP_INDEX_SUBSCR);
-    }
-    return;
-}
-
 ParseRule rules[] = {
-        [TOKEN_LEFT_PAREN]    = {grouping, call,   PREC_CALL},
-        [TOKEN_RIGHT_PAREN]   = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_LEFT_BRACE]    = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_RIGHT_BRACE]   = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_COMMA]         = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_DOT]           = {NULL,     dot,    PREC_CALL},
-        [TOKEN_MINUS]         = {unary,    binary, PREC_TERM},
-        [TOKEN_PLUS]          = {NULL,     binary, PREC_TERM},
-        [TOKEN_SEMICOLON]     = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_SLASH]         = {NULL,     binary, PREC_FACTOR},
-        [TOKEN_STAR]          = {NULL,     binary, PREC_FACTOR},
-        [TOKEN_BANG]          = {unary,    NULL,   PREC_NONE},
-        [TOKEN_BANG_EQUAL]    = {NULL,     binary, PREC_EQUALITY},
-        [TOKEN_EQUAL]         = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_EQUAL_EQUAL]   = {NULL,     binary, PREC_EQUALITY},
-        [TOKEN_GREATER]       = {NULL,     binary, PREC_COMPARISON},
+        [TOKEN_LEFT_PAREN] = {grouping, call,   PREC_CALL},
+        [TOKEN_RIGHT_PAREN] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_LEFT_BRACE] = {NULL,     NULL,   PREC_NONE}, // [big]
+        [TOKEN_RIGHT_BRACE] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_COMMA] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_DOT] = {NULL,     dot,    PREC_CALL},
+        [TOKEN_MINUS] = {unary,    binary, PREC_TERM},
+        [TOKEN_PLUS] = {NULL,     binary, PREC_TERM},
+        [TOKEN_SEMICOLON] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_SLASH] = {NULL,     binary, PREC_FACTOR},
+        [TOKEN_STAR] = {NULL,     binary, PREC_FACTOR},
+        [TOKEN_BANG] = {unary,    NULL,   PREC_NONE},
+        [TOKEN_BANG_EQUAL] = {NULL,     binary, PREC_EQUALITY},
+        [TOKEN_EQUAL] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_EQUAL_EQUAL] = {NULL,     binary, PREC_EQUALITY},
+        [TOKEN_GREATER] = {NULL,     binary, PREC_COMPARISON},
         [TOKEN_GREATER_EQUAL] = {NULL,     binary, PREC_COMPARISON},
-        [TOKEN_LESS]          = {NULL,     binary, PREC_COMPARISON},
-        [TOKEN_LESS_EQUAL]    = {NULL,     binary, PREC_COMPARISON},
-        [TOKEN_IDENTIFIER]    = {variable, NULL,   PREC_NONE},
-        [TOKEN_STRING]        = {string,   NULL,   PREC_NONE},
-        [TOKEN_NUMBER]        = {number,   NULL,   PREC_NONE},
-        [TOKEN_AND]           = {NULL,     and_,   PREC_AND},
-        [TOKEN_CLASS]         = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_ELSE]          = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_FALSE]         = {literal,  NULL,   PREC_NONE},
-        [TOKEN_FOR]           = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_FUN]           = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_IF]            = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_NIL]           = {literal,  NULL,   PREC_NONE},
-        [TOKEN_OR]            = {NULL,     or_,    PREC_OR},
-        [TOKEN_PRINT]         = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_RETURN]        = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_SUPER]         = {super_,   NULL,   PREC_NONE},
-        [TOKEN_THIS]          = {this_,    NULL,   PREC_NONE},
-        [TOKEN_TRUE]          = {literal,  NULL,   PREC_NONE},
-        [TOKEN_VAR]           = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_WHILE]         = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_ERROR]         = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_LEFT_BRACKET]  = {list,    subscript,  PREC_SUBSCRIPT},
-        [TOKEN_RIGHT_BRACKET] = {NULL,     NULL,   PREC_NONE},
-        [TOKEN_EOF]           = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_LESS] = {NULL,     binary, PREC_COMPARISON},
+        [TOKEN_LESS_EQUAL] = {NULL,     binary, PREC_COMPARISON},
+        [TOKEN_IDENTIFIER] = {variable, NULL,   PREC_NONE},
+        [TOKEN_STRING] = {string,   NULL,   PREC_NONE},
+        [TOKEN_NUMBER] = {number,   NULL,   PREC_NONE},
+        [TOKEN_AND] = {NULL,     and_,   PREC_AND},
+        [TOKEN_CLASS] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_ELSE] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_FALSE] = {literal,  NULL,   PREC_NONE},
+        [TOKEN_FOR] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_FUN] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_IF] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_NIL] = {literal,  NULL,   PREC_NONE},
+        [TOKEN_OR] = {NULL,     or_,    PREC_OR},
+        [TOKEN_RETURN] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_SUPER] = {super_,   NULL,   PREC_NONE},
+        [TOKEN_THIS] = {this_,    NULL,   PREC_NONE},
+        [TOKEN_TRUE] = {literal,  NULL,   PREC_NONE},
+        [TOKEN_VAR] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_WHILE] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_ERROR] = {NULL,     NULL,   PREC_NONE},
+        [TOKEN_EOF] = {NULL,     NULL,   PREC_NONE},
 };
 
 static void parsePrecedence(VM* vm, Precedence precedence) {
@@ -634,6 +599,7 @@ static void parsePrecedence(VM* vm, Precedence precedence) {
         error("Expect expression.");
         return;
     }
+
     bool canAssign = precedence <= PREC_ASSIGNMENT;
     prefixRule(vm, canAssign);
 
@@ -680,6 +646,7 @@ static void function(VM* vm, FunctionType type) {
             defineVariable(vm, constant);
         } while (match(TOKEN_COMMA));
     }
+
     consume(TOKEN_RIGHT_PAREN, "Expect ')' after parameters.");
     consume(TOKEN_LEFT_BRACE, "Expect '{' before function body.");
     block(vm);
@@ -696,11 +663,12 @@ static void function(VM* vm, FunctionType type) {
 static void method(VM* vm) {
     consume(TOKEN_IDENTIFIER, "Expect method name.");
     uint8_t constant = identifierConstant(vm, &parser.previous);
+
     FunctionType type = TYPE_METHOD;
-    if (parser.previous.length == 4 &&
-        memcmp(parser.previous.start, "init", 4) == 0) {
+    if (parser.previous.length == 4 && memcmp(parser.previous.start, "init", 4) == 0) {
         type = TYPE_INITIALIZER;
     }
+
     function(vm, type);
     emitBytes(vm, OP_METHOD, constant);
 }
@@ -709,43 +677,43 @@ static void classDeclaration(VM* vm) {
     consume(TOKEN_IDENTIFIER, "Expect class name.");
     Token className = parser.previous;
     uint8_t nameConstant = identifierConstant(vm, &parser.previous);
-    declareVariable();
 
+    declareVariable();
     emitBytes(vm, OP_CLASS, nameConstant);
     defineVariable(vm, nameConstant);
 
-    ClassCompiler classCompiler;
-    classCompiler.hasSuperclass = false;
-    classCompiler.enclosing = currentClass;
+    ClassCompiler classCompiler = { .name = parser.previous, .enclosing = currentClass };
     currentClass = &classCompiler;
 
     if (match(TOKEN_LESS)) {
-        consume(TOKEN_IDENTIFIER, "Expect superclass name.");
+        consume(TOKEN_IDENTIFIER, "Expect super class name.");
         variable(vm, false);
-
         if (identifiersEqual(&className, &parser.previous)) {
-            error("A class can't inherit from itself.");
+            error("A class cannot inherit from itself.");
         }
-        beginScope();
-        addLocal(syntheticToken("super"));
-        defineVariable(vm, 0);
-        namedVariable(vm, className, false);
-        emitByte(vm, OP_INHERIT);
-        classCompiler.hasSuperclass = true;
     }
+    else {
+        namedVariable(vm, parser.rootClass, false);
+        if (identifiersEqual(&className, &parser.rootClass)) {
+            error("Cannot redeclare root class Object.");
+        }
+    }
+
+    beginScope();
+    addLocal(syntheticToken("super"));
+    defineVariable(vm, 0);
+    namedVariable(vm, className, false);
+    emitByte(vm, OP_INHERIT);
 
     namedVariable(vm, className, false);
     consume(TOKEN_LEFT_BRACE, "Expect '{' before class body.");
     while (!check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF)) {
         method(vm);
     }
+
     consume(TOKEN_RIGHT_BRACE, "Expect '}' after class body.");
     emitByte(vm, OP_POP);
-
-    if (classCompiler.hasSuperclass) {
-        endScope(vm);
-    }
-
+    endScope(vm);
     currentClass = currentClass->enclosing;
 }
 
@@ -761,15 +729,14 @@ static void varDeclaration(VM* vm) {
 
     if (match(TOKEN_EQUAL)) {
         expression(vm);
-    } else {
+    }
+    else {
         emitByte(vm, OP_NIL);
     }
-    consume(TOKEN_SEMICOLON,
-            "Expect ';' after variable declaration.");
+    consume(TOKEN_SEMICOLON, "Expect ';' after variable declaration.");
 
     defineVariable(vm, global);
 }
-
 
 static void expressionStatement(VM* vm) {
     expression(vm);
@@ -781,9 +748,12 @@ static void forStatement(VM* vm) {
     beginScope();
     consume(TOKEN_LEFT_PAREN, "Expect '(' after 'for'.");
     if (match(TOKEN_SEMICOLON)) {
-    } else if (match(TOKEN_VAR)) {
+
+    }
+    else if (match(TOKEN_VAR)) {
         varDeclaration(vm);
-    } else {
+    }
+    else {
         expressionStatement(vm);
     }
 
@@ -792,7 +762,6 @@ static void forStatement(VM* vm) {
     if (!match(TOKEN_SEMICOLON)) {
         expression(vm);
         consume(TOKEN_SEMICOLON, "Expect ';' after loop condition.");
-
         exitJump = emitJump(vm, OP_JUMP_IF_FALSE);
         emitByte(vm, OP_POP);
     }
@@ -816,7 +785,6 @@ static void forStatement(VM* vm) {
         patchJump(exitJump);
         emitByte(vm, OP_POP);
     }
-
     endScope(vm);
 }
 
@@ -837,12 +805,6 @@ static void ifStatement(VM* vm) {
     patchJump(elseJump);
 }
 
-static void printStatement(VM* vm) {
-    expression(vm);
-    consume(TOKEN_SEMICOLON, "Expect ';' after value.");
-    emitByte(vm, OP_PRINT);
-}
-
 static void returnStatement(VM* vm) {
     if (current->type == TYPE_SCRIPT) {
         error("Can't return from top-level code.");
@@ -850,63 +812,72 @@ static void returnStatement(VM* vm) {
 
     if (match(TOKEN_SEMICOLON)) {
         emitReturn(vm);
-    } else {
+    }
+    else {
         if (current->type == TYPE_INITIALIZER) {
-            error("Can't return a value from an initializer.");
+            error("Cannot return value from an initializer.");
         }
+
         expression(vm);
         consume(TOKEN_SEMICOLON, "Expect ';' after return value.");
         emitByte(vm, OP_RETURN);
     }
 }
 
-static void switchStatement(VM* vm){
+static void switchStatement(VM* vm) {
     consume(TOKEN_LEFT_PAREN, "Expect '(' after 'switch'.");
     expression(vm);
-    consume(TOKEN_RIGHT_PAREN, "Expect ')' after condition.");
-    consume(TOKEN_LEFT_BRACE, "Expect '{' before switch body.");
+    consume(TOKEN_RIGHT_PAREN, "Expect ')' after value.");
+    consume(TOKEN_LEFT_BRACE, "Expect '{' before switch cases.");
 
     int state = 0;
     int caseEnds[MAX_CASES];
     int caseCount = 0;
     int previousCaseSkip = -1;
 
-    while (!match(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF)){
-        if (match(TOKEN_CASE) || match(TOKEN_DEFAULT)){
+    while (!match(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF)) {
+        if (match(TOKEN_CASE) || match(TOKEN_DEFAULT)) {
             TokenType caseType = parser.previous.type;
-            if (state == 2){
-                error("Cannot have another case or default after the default case.");
+            if (state == 2) {
+                error("Can't have another case or default after the default case.");
             }
 
-            if (state == 1){
+            if (state == 1) {
                 caseEnds[caseCount++] = emitJump(vm, OP_JUMP);
                 patchJump(previousCaseSkip);
                 emitByte(vm, OP_POP);
             }
 
-            if (caseType == TOKEN_CASE){
+            if (caseType == TOKEN_CASE) {
                 state = 1;
                 emitByte(vm, OP_DUP);
                 expression(vm);
-            }else{
+
+                consume(TOKEN_COLON, "Expect ':' after case value.");
+                emitByte(vm, OP_EQUAL);
+                previousCaseSkip = emitJump(vm, OP_JUMP_IF_FALSE);
+                emitByte(vm, OP_POP);
+            }
+            else {
                 state = 2;
-                consume(TOKEN_COLON, "Expect ':' after 'default'.");
+                consume(TOKEN_COLON, "Expect ':' after default.");
                 previousCaseSkip = -1;
             }
-        }else{
-            if (state == 0){
-                error("Cannot have statements before any case.");
+        }
+        else {
+            if (state == 0) {
+                error("Can't have statements before any case.");
             }
             statement(vm);
         }
     }
 
-    if (state == 1){
+    if (state == 1) {
         patchJump(previousCaseSkip);
         emitByte(vm, OP_POP);
     }
 
-    for (int i = 0; i < caseCount; i++){
+    for (int i = 0; i < caseCount; i++) {
         patchJump(caseEnds[i]);
     }
 
@@ -940,14 +911,12 @@ static void synchronize() {
             case TOKEN_FOR:
             case TOKEN_IF:
             case TOKEN_WHILE:
-            case TOKEN_PRINT:
             case TOKEN_RETURN:
                 return;
 
             default:
                 ;
         }
-
         advance();
     }
 }
@@ -955,35 +924,41 @@ static void synchronize() {
 static void declaration(VM* vm) {
     if (match(TOKEN_CLASS)) {
         classDeclaration(vm);
-    } else if (match(TOKEN_FUN)) {
+    }
+    else if (match(TOKEN_FUN)) {
         funDeclaration(vm);
-    } else if (match(TOKEN_VAR)) {
+    }
+    else if (match(TOKEN_VAR)) {
         varDeclaration(vm);
-    }else {
+    }
+    else {
         statement(vm);
     }
-
     if (parser.panicMode) synchronize();
 }
 
 static void statement(VM* vm) {
-    if (match(TOKEN_PRINT)) {
-        printStatement(vm);
-    } else if (match(TOKEN_FOR)) {
+    if (match(TOKEN_FOR)) {
         forStatement(vm);
-    } else if (match(TOKEN_IF)) {
+    }
+    else if (match(TOKEN_IF)) {
         ifStatement(vm);
-    } else if (match(TOKEN_RETURN)) {
+    }
+    else if (match(TOKEN_RETURN)) {
         returnStatement(vm);
-    }else if (match(TOKEN_SWITCH)) {
+    }
+    else if (match(TOKEN_SWITCH)) {
         switchStatement(vm);
-    }else if (match(TOKEN_WHILE)) {
+    }
+    else if (match(TOKEN_WHILE)) {
         whileStatement(vm);
-    } else if (match(TOKEN_LEFT_BRACE)) {
+    }
+    else if (match(TOKEN_LEFT_BRACE)) {
         beginScope();
         block(vm);
         endScope(vm);
-    } else {
+    }
+    else {
         expressionStatement(vm);
     }
 }
@@ -995,6 +970,7 @@ ObjFunction* compile(VM* vm, const char* source) {
     initCompiler(vm, &compiler, TYPE_SCRIPT);
 
     parser.scanner = &scanner;
+    parser.rootClass = syntheticToken("Object");
     parser.hadError = false;
     parser.panicMode = false;
     advance();

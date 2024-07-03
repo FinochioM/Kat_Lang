@@ -1,6 +1,7 @@
 #ifndef kat_vm_h
 #define kat_vm_h
 
+#include "common.h"
 #include "object.h"
 #include "table.h"
 #include "value.h"
@@ -14,22 +15,32 @@ typedef struct {
     Value* slots;
 } CallFrame;
 
-typedef struct {
+struct VM {
+    ObjClass* objectClass;
+    ObjClass* nilClass;
+    ObjClass* boolClass;
+    ObjClass* numberClass;
+
     CallFrame frames[FRAMES_MAX];
     int frameCount;
+
     Value stack[STACK_MAX];
     Value* stackTop;
+
     Table globals;
     Table strings;
     ObjString* initString;
     ObjUpvalue* openUpvalues;
+
     size_t bytesAllocated;
     size_t nextGC;
+
     Obj* objects;
+
     int grayCount;
     int grayCapacity;
     Obj** grayStack;
-} VM;
+};
 
 typedef enum {
     INTERPRET_OK,
@@ -37,14 +48,13 @@ typedef enum {
     INTERPRET_RUNTIME_ERROR
 } InterpretResult;
 
-extern VM vm;
+void initVM(VM* vm);
+void freeVM(VM* vm);
 
-void initVM();
-void freeVM();
-InterpretResult interpret(const char* source);
-void push(Value value);
-Value pop();
-void runtimeError(const char* format, ...);
-void defineNative(const char* name, NativeFn function);
+void bindSuperClass(VM* vm, ObjClass* subclass, ObjClass* superclass);
+void runtimeError(VM* vm, const char* format, ...);
+InterpretResult interpret(VM* vm, const char* source);
+void push(VM* vm, Value value);
+Value pop(VM* vm);
 
 #endif

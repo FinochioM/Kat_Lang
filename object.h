@@ -6,28 +6,26 @@
 #include "table.h"
 #include "value.h"
 
-#define OBJ_TYPE(value)             (AS_OBJ(value)->type)
+#define OBJ_TYPE(value)            (AS_OBJ(value)->type)
 
-#define IS_BOUND_METHOD(value)      isObjType(value, OBJ_BOUND_METHOD)
-#define IS_CLASS(value)             isObjType(value, OBJ_CLASS)
-#define IS_CLOSURE(value)           isObjType(value, OBJ_CLOSURE)
-#define IS_FUNCTION(value)          isObjType(value, OBJ_FUNCTION)
-#define IS_INSTANCE(value)          isObjType(value, OBJ_INSTANCE)
-#define IS_NATIVE_FUNCTION(value)   isObjType(value, OBJ_NATIVE_FUNCTION)
-#define IS_NATIVE_METHOD(value)     isObjType(value, OBJ_NATIVE_METHOD)
-#define IS_STRING(value)            isObjType(value, OBJ_STRING)
-#define IS_LIST(value)              isObjType(value, OBJ_LIST)
+#define IS_BOUND_METHOD(value)     isObjType(value, OBJ_BOUND_METHOD)
+#define IS_CLASS(value)            isObjType(value, OBJ_CLASS)
+#define IS_CLOSURE(value)          isObjType(value, OBJ_CLOSURE)
+#define IS_FUNCTION(value)         isObjType(value, OBJ_FUNCTION)
+#define IS_INSTANCE(value)         isObjType(value, OBJ_INSTANCE)
+#define IS_NATIVE_FUNCTION(value)  isObjType(value, OBJ_NATIVE_FUNCTION)
+#define IS_NATIVE_METHOD(value)    isObjType(value, OBJ_NATIVE_METHOD)
+#define IS_STRING(value)           isObjType(value, OBJ_STRING)
 
-#define AS_BOUND_METHOD(value)      ((ObjBoundMethod*)AS_OBJ(value))
-#define AS_CLASS(value)             ((ObjClass*)AS_OBJ(value))
-#define AS_CLOSURE(value)           ((ObjClosure*)AS_OBJ(value))
-#define AS_FUNCTION(value)          ((ObjFunction*)AS_OBJ(value))
-#define AS_INSTANCE(value)          ((ObjInstance*)AS_OBJ(value))
-#define AS_NATIVE_FUNCTION(value)   (((ObjNativeFunction*)AS_OBJ(value))->function)
-#define AS_NATIVE_METHOD(value)     (((ObjNativeMethod*)AS_OBJ(value))->function)
-#define AS_STRING(value)            ((ObjString*)AS_OBJ(value))
-#define AS_CSTRING(value)           (((ObjString*)AS_OBJ(value))->chars)
-#define AS_LIST(value)              ((ObjList*)AS_OBJ(value))
+#define AS_BOUND_METHOD(value)     ((ObjBoundMethod*)AS_OBJ(value))
+#define AS_CLASS(value)            ((ObjClass*)AS_OBJ(value))
+#define AS_CLOSURE(value)          ((ObjClosure*)AS_OBJ(value))
+#define AS_FUNCTION(value)         ((ObjFunction*)AS_OBJ(value))
+#define AS_INSTANCE(value)         ((ObjInstance*)AS_OBJ(value))
+#define AS_NATIVE_FUNCTION(value)  (((ObjNativeFunction*)AS_OBJ(value))->function)
+#define AS_NATIVE_METHOD(value)    (((ObjNativeMethod*)AS_OBJ(value))->method)
+#define AS_STRING(value)           ((ObjString*)AS_OBJ(value))
+#define AS_CSTRING(value)          (((ObjString*)AS_OBJ(value))->chars)
 
 typedef enum {
     OBJ_BOUND_METHOD,
@@ -38,7 +36,6 @@ typedef enum {
     OBJ_NATIVE_FUNCTION,
     OBJ_NATIVE_METHOD,
     OBJ_STRING,
-    OBJ_LIST,
     OBJ_UPVALUE
 } ObjType;
 
@@ -64,7 +61,7 @@ typedef struct {
     NativeFn function;
 } ObjNativeFunction;
 
-typedef struct{
+typedef struct {
     Obj obj;
     NativeMethod method;
 } ObjNativeMethod;
@@ -90,12 +87,13 @@ typedef struct {
     int upvalueCount;
 } ObjClosure;
 
-typedef struct {
+struct ObjClass {
     Obj obj;
     ObjString* name;
+    struct ObjClass* superclass;
     Table methods;
     bool isNative;
-} ObjClass;
+};
 
 typedef struct {
     Obj obj;
@@ -109,37 +107,22 @@ typedef struct {
     ObjClosure* method;
 } ObjBoundMethod;
 
-typedef struct {
-    Obj obj;
-    int  count;
-    int capacity;
-    Value* items;
-} ObjList;
-
-
 ObjBoundMethod* newBoundMethod(VM* vm, Value receiver, ObjClosure* method);
 ObjClass* newClass(VM* vm, ObjString* name);
 ObjClosure* newClosure(VM* vm, ObjFunction* function);
 ObjFunction* newFunction(VM* vm);
 ObjInstance* newInstance(VM* vm, ObjClass* klass);
 ObjNativeFunction* newNativeFunction(VM* vm, NativeFn function);
-ObjNativeMethod* newNativeMethod(VM* vm, NativeMethod function);
+ObjNativeMethod* newNativeMethod(VM* vm, NativeMethod method);
 ObjString* takeString(VM* vm, char* chars, int length);
 ObjString* copyString(VM* vm, const char* chars, int length);
+ObjString* formattedString(VM* vm, const char* format, ...);
+ObjString* formattedLongString(VM* vm, const char* format, ...);
 ObjUpvalue* newUpvalue(VM* vm, Value* slot);
-ObjList* newList(VM* vm);
-
-void appendToList(VM* vm, ObjList* list, Value value);
-void storeToList(VM* vm, ObjList* list, int index, Value value);
-void deleteFromList(VM* vm, ObjList* list, int index);
+ObjClass* getObjClass(VM* vm, Value value);
 void printObject(Value value);
-
-bool isValidListIndex(VM* vm, ObjList* list, int index);
-
-Value indexFromList(VM* vm, ObjList* list, int index);
 
 static inline bool isObjType(Value value, ObjType type) {
     return IS_OBJ(value) && AS_OBJ(value)->type == type;
 }
-
 #endif

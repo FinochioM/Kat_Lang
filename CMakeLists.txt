@@ -21,9 +21,11 @@ add_executable(Kat main.c
         object.c
         table.h
         table.c
-        core_library.c
-        core_library.h
         resource.h
         native.h
         native.c
+        std/lang.c
+        assert.c
+        hash.h
+        hash.c
 )

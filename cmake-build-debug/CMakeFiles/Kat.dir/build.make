@@ -208,24 +208,10 @@ CMakeFiles/Kat.dir/table.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Kat.dir/table.c.s"
 	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Matias\Downloads\Kat_in_C-master1\table.c -o CMakeFiles\Kat.dir\table.c.s
 
-CMakeFiles/Kat.dir/core_library.c.obj: CMakeFiles/Kat.dir/flags.make
-CMakeFiles/Kat.dir/core_library.c.obj: C:/Users/Matias/Downloads/Kat_in_C-master1/core_library.c
-CMakeFiles/Kat.dir/core_library.c.obj: CMakeFiles/Kat.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Matias\Downloads\Kat_in_C-master1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/Kat.dir/core_library.c.obj"
-	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Kat.dir/core_library.c.obj -MF CMakeFiles\Kat.dir\core_library.c.obj.d -o CMakeFiles\Kat.dir\core_library.c.obj -c C:\Users\Matias\Downloads\Kat_in_C-master1\core_library.c
-
-CMakeFiles/Kat.dir/core_library.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Kat.dir/core_library.c.i"
-	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Matias\Downloads\Kat_in_C-master1\core_library.c > CMakeFiles\Kat.dir\core_library.c.i
-
-CMakeFiles/Kat.dir/core_library.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Kat.dir/core_library.c.s"
-	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Matias\Downloads\Kat_in_C-master1\core_library.c -o CMakeFiles\Kat.dir\core_library.c.s
-
 CMakeFiles/Kat.dir/native.c.obj: CMakeFiles/Kat.dir/flags.make
 CMakeFiles/Kat.dir/native.c.obj: C:/Users/Matias/Downloads/Kat_in_C-master1/native.c
 CMakeFiles/Kat.dir/native.c.obj: CMakeFiles/Kat.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Matias\Downloads\Kat_in_C-master1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/Kat.dir/native.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Matias\Downloads\Kat_in_C-master1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/Kat.dir/native.c.obj"
 	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Kat.dir/native.c.obj -MF CMakeFiles\Kat.dir\native.c.obj.d -o CMakeFiles\Kat.dir\native.c.obj -c C:\Users\Matias\Downloads\Kat_in_C-master1\native.c
 
 CMakeFiles/Kat.dir/native.c.i: cmake_force
@@ -235,6 +221,48 @@ CMakeFiles/Kat.dir/native.c.i: cmake_force
 CMakeFiles/Kat.dir/native.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Kat.dir/native.c.s"
 	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Matias\Downloads\Kat_in_C-master1\native.c -o CMakeFiles\Kat.dir\native.c.s
+
+CMakeFiles/Kat.dir/std/lang.c.obj: CMakeFiles/Kat.dir/flags.make
+CMakeFiles/Kat.dir/std/lang.c.obj: C:/Users/Matias/Downloads/Kat_in_C-master1/std/lang.c
+CMakeFiles/Kat.dir/std/lang.c.obj: CMakeFiles/Kat.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Matias\Downloads\Kat_in_C-master1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/Kat.dir/std/lang.c.obj"
+	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Kat.dir/std/lang.c.obj -MF CMakeFiles\Kat.dir\std\lang.c.obj.d -o CMakeFiles\Kat.dir\std\lang.c.obj -c C:\Users\Matias\Downloads\Kat_in_C-master1\std\lang.c
+
+CMakeFiles/Kat.dir/std/lang.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Kat.dir/std/lang.c.i"
+	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Matias\Downloads\Kat_in_C-master1\std\lang.c > CMakeFiles\Kat.dir\std\lang.c.i
+
+CMakeFiles/Kat.dir/std/lang.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Kat.dir/std/lang.c.s"
+	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Matias\Downloads\Kat_in_C-master1\std\lang.c -o CMakeFiles\Kat.dir\std\lang.c.s
+
+CMakeFiles/Kat.dir/assert.c.obj: CMakeFiles/Kat.dir/flags.make
+CMakeFiles/Kat.dir/assert.c.obj: C:/Users/Matias/Downloads/Kat_in_C-master1/assert.c
+CMakeFiles/Kat.dir/assert.c.obj: CMakeFiles/Kat.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Matias\Downloads\Kat_in_C-master1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building C object CMakeFiles/Kat.dir/assert.c.obj"
+	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Kat.dir/assert.c.obj -MF CMakeFiles\Kat.dir\assert.c.obj.d -o CMakeFiles\Kat.dir\assert.c.obj -c C:\Users\Matias\Downloads\Kat_in_C-master1\assert.c
+
+CMakeFiles/Kat.dir/assert.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Kat.dir/assert.c.i"
+	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Matias\Downloads\Kat_in_C-master1\assert.c > CMakeFiles\Kat.dir\assert.c.i
+
+CMakeFiles/Kat.dir/assert.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Kat.dir/assert.c.s"
+	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Matias\Downloads\Kat_in_C-master1\assert.c -o CMakeFiles\Kat.dir\assert.c.s
+
+CMakeFiles/Kat.dir/hash.c.obj: CMakeFiles/Kat.dir/flags.make
+CMakeFiles/Kat.dir/hash.c.obj: C:/Users/Matias/Downloads/Kat_in_C-master1/hash.c
+CMakeFiles/Kat.dir/hash.c.obj: CMakeFiles/Kat.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Matias\Downloads\Kat_in_C-master1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building C object CMakeFiles/Kat.dir/hash.c.obj"
+	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Kat.dir/hash.c.obj -MF CMakeFiles\Kat.dir\hash.c.obj.d -o CMakeFiles\Kat.dir\hash.c.obj -c C:\Users\Matias\Downloads\Kat_in_C-master1\hash.c
+
+CMakeFiles/Kat.dir/hash.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Kat.dir/hash.c.i"
+	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Matias\Downloads\Kat_in_C-master1\hash.c > CMakeFiles\Kat.dir\hash.c.i
+
+CMakeFiles/Kat.dir/hash.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Kat.dir/hash.c.s"
+	"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Matias\Downloads\Kat_in_C-master1\hash.c -o CMakeFiles\Kat.dir\hash.c.s
 
 # Object files for target Kat
 Kat_OBJECTS = \
@@ -248,8 +276,10 @@ Kat_OBJECTS = \
 "CMakeFiles/Kat.dir/scanner.c.obj" \
 "CMakeFiles/Kat.dir/object.c.obj" \
 "CMakeFiles/Kat.dir/table.c.obj" \
-"CMakeFiles/Kat.dir/core_library.c.obj" \
-"CMakeFiles/Kat.dir/native.c.obj"
+"CMakeFiles/Kat.dir/native.c.obj" \
+"CMakeFiles/Kat.dir/std/lang.c.obj" \
+"CMakeFiles/Kat.dir/assert.c.obj" \
+"CMakeFiles/Kat.dir/hash.c.obj"
 
 # External object files for target Kat
 Kat_EXTERNAL_OBJECTS =
@@ -264,13 +294,15 @@ Kat.exe: CMakeFiles/Kat.dir/compiler.c.obj
 Kat.exe: CMakeFiles/Kat.dir/scanner.c.obj
 Kat.exe: CMakeFiles/Kat.dir/object.c.obj
 Kat.exe: CMakeFiles/Kat.dir/table.c.obj
-Kat.exe: CMakeFiles/Kat.dir/core_library.c.obj
 Kat.exe: CMakeFiles/Kat.dir/native.c.obj
+Kat.exe: CMakeFiles/Kat.dir/std/lang.c.obj
+Kat.exe: CMakeFiles/Kat.dir/assert.c.obj
+Kat.exe: CMakeFiles/Kat.dir/hash.c.obj
 Kat.exe: CMakeFiles/Kat.dir/build.make
 Kat.exe: CMakeFiles/Kat.dir/linkLibs.rsp
 Kat.exe: CMakeFiles/Kat.dir/objects1.rsp
 Kat.exe: CMakeFiles/Kat.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Matias\Downloads\Kat_in_C-master1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking C executable Kat.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Matias\Downloads\Kat_in_C-master1\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Linking C executable Kat.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\Kat.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
