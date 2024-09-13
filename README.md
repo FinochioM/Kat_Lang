@@ -5,7 +5,7 @@ Kat is a programming language designed with a primary focus on automation. Inspi
 The language structure is based on the CLox language built in the book Crafting Interpreters, big credit for Robert Nystrom for creating an amazing book.
 I also want to give credit to HallofFamer for his implementation of CLox, he added a lot of features that helped me understand how I could develop some others for my language.
 
-The current state of the language differs from the main "automation language" idea, but my idea is have a good foundation before actually moving to the automation part.
+The current state of the language differs from the main "automation language" idea since I want to have a good foundation before focusing on automation.
 
 # Roadmap of Kat Language.
 
